@@ -1,0 +1,6 @@
+{
+  "name": "EduGenius AI",
+  "description": "Smart Learning & Education Assistant by Apex Edutech Labs — AI-powered topic explanations, MCQ quizzes, 24/7 AI tutor, and personalized study planner powered by Google Gemini.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
