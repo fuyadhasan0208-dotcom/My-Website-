@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { AppProvider } from './contexts/AppContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
@@ -23,7 +23,7 @@ function ScrollToTop() {
 export default function App() {
   return (
     <AppProvider>
-      <BrowserRouter>
+      <HashRouter>
         <ScrollToTop />
         <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-[#1E1B4B]">
           <Navbar />
@@ -42,7 +42,7 @@ export default function App() {
           <ToastContainer />
           <ConfirmModal />
         </div>
-      </BrowserRouter>
+      </HashRouter>
     </AppProvider>
   );
 }

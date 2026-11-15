@@ -17,8 +17,9 @@ import { FeatureCard } from '../components/FeatureCard';
 import { LoadingIndicator } from '../components/LoadingIndicator';
 import { MarkdownRenderer } from '../components/MarkdownRenderer';
 import { ErrorBanner } from '../components/ErrorBanner';
+import heroWorkspaceImg from '../assets/images/hero_learning_workspace_1794629150736.jpg';
 
-const HERO_IMAGE_PATH = '/src/assets/images/hero_learning_workspace_1794629150736.jpg';
+const HERO_IMAGE_PATH = heroWorkspaceImg;
 
 const SAMPLE_QUESTIONS = {
   Bangla: [

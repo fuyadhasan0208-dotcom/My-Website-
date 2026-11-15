@@ -63,8 +63,12 @@ export function Settings() {
 
   useEffect(() => {
     let active = true;
-    fetch('/api/health')
-      .then((res) => res.json())
+    const apiBase = (import.meta.env.VITE_API_BASE_URL ?? '').trim().replace(/\/$/, '');
+    fetch(`${apiBase}/api/health`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Health check unavailable');
+        return res.json();
+      })
       .then((data: { configured?: boolean }) => {
         if (active) {
           setServerConfigured(Boolean(data.configured));

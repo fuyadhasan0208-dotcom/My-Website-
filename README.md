@@ -6,16 +6,16 @@ EduGenius AI is a full-stack AI-powered educational platform integrating Google'
 
 ## Core Modules
 
-- **Home (`/`)**: Bilingual hero with an instant interactive Gemini Q&A preview, feature overview, and demonstration showcase metrics.
-- **AI Study Hub (`/study-hub`)**: Subject, academic level, explanation style, and language controls with Markdown, LaTeX math (`KaTeX`), syntax-highlighted code blocks, `.txt` export, clipboard copy, and interactive flip flashcards.
-- **Smart Quiz (`/quiz`)**: Structured JSON MCQ generator (5–20 questions across Easy/Medium/Hard in Bangla or English), immediate color + icon feedback, explanations, Recharts score analytics, and full answer review.
-- **AI Tutor (`/tutor`)**: 24/7 context-aware conversational tutor with quick-prompt suggestions, Enter-to-send, and LocalStorage conversation persistence.
-- **Study Planner (`/planner`)**: Personalized exam timetable generator with daily schedules, weekly subject-hour bar charts, break/revision blocks, practice tests, and `.txt` export.
-- **Settings (`/settings`)**: Server-side Gemini API connectivity test, active model selector (`gemini-4-hydrogen`, `gemini-3.1-flash-lite`), response profile slider (`0.2`–`0.7`), default language/level preferences, and LocalStorage management.
+- **Home (`#/`)**: Bilingual hero with an instant interactive Gemini Q&A preview, feature overview, and demonstration showcase metrics.
+- **AI Study Hub (`#/study-hub`)**: Subject, academic level, explanation style, and language controls with Markdown, LaTeX math (`KaTeX`), syntax-highlighted code blocks, `.txt` export, clipboard copy, and interactive flip flashcards.
+- **Smart Quiz (`#/quiz`)**: Structured JSON MCQ generator (5–20 questions across Easy/Medium/Hard in Bangla or English), immediate color + icon feedback, explanations, Recharts score analytics, and full answer review.
+- **AI Tutor (`#/tutor`)**: 24/7 context-aware conversational tutor with quick prompt suggestions, Enter-to-send, and LocalStorage conversation persistence.
+- **Study Planner (`#/planner`)**: Personalized exam timetable generator with daily schedules, weekly subject-hour bar charts, break/revision blocks, practice tests, and `.txt` export.
+- **Settings (`#/settings`)**: Server-side Gemini API connectivity test, active model selector (`gemini-4-hydrogen`, `gemini-3.1-flash-lite`), response profile slider (`0.2`–`0.7`), default language/level preferences, and LocalStorage management.
 
 ## Tech Stack
 
-- **Frontend**: React 19, TypeScript, Tailwind CSS v4, React Router, Lucide React, Recharts, React Markdown (`remark-gfm`, `remark-math`, `rehype-katex`), React Syntax Highlighter
+- **Frontend**: React 19, TypeScript, Tailwind CSS v4, React Router (`HashRouter`), Lucide React, Recharts, React Markdown (`remark-gfm`, `remark-math`, `rehype-katex`), React Syntax Highlighter
 - **Backend**: Node.js + Express (`server.ts`) + `@google/genai` SDK
 - **Persistence**: Browser LocalStorage for MVP notes, chat history, quiz scores, study plans, and preferences
 
@@ -43,6 +43,15 @@ EduGenius AI is a full-stack AI-powered educational platform integrating Google'
    npm run build
    npm start
    ```
+
+## Deploying to GitHub Pages
+
+Vite builds static files into `dist/` (using `base: './'` and `HashRouter` so subpaths like `https://<user>.github.io/<repo>/` render cleanly without a blank page).
+
+1. In your GitHub repository, open **Settings > Pages**.
+2. Under **Build and deployment > Source**, select **GitHub Actions**.
+3. Push to `main` (uses `.github/workflows/deploy.yml` to run `npm run build` and deploy `dist/`).
+4. **Backend Note**: GitHub Pages hosts only the static frontend (`dist/`). To power live `/api/ai/*` Gemini calls from a GitHub Pages frontend, deploy `server.ts` on a Node host (e.g., Cloud Run, Render, Railway) with `GEMINI_API_KEY` set, and configure `VITE_API_BASE_URL` during the frontend build.
 
 ## Security Notes
 

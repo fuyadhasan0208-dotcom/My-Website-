@@ -31,10 +31,12 @@ export class GeminiServiceError extends Error {
   }
 }
 
+const API_BASE = (import.meta.env.VITE_API_BASE_URL ?? '').trim().replace(/\/$/, '');
+
 async function postJson<TResponse>(url: string, body: unknown): Promise<TResponse> {
   let response: Response;
   try {
-    response = await fetch(url, {
+    response = await fetch(`${API_BASE}${url}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -54,6 +56,14 @@ async function postJson<TResponse>(url: string, body: unknown): Promise<TRespons
   try {
     data = (await response.json()) as Record<string, unknown>;
   } catch {
+    if (response.status === 404 || response.status === 405) {
+      throw new GeminiServiceError(
+        'AI backend endpoint (/api/ai/*) was not found on this host. Static hosts like GitHub Pages require deploying the Node/Express server or setting VITE_API_BASE_URL.',
+        response.status,
+        'BACKEND_UNAVAILABLE',
+        false
+      );
+    }
     throw new GeminiServiceError(
       `Server returned an unexpected response (HTTP ${response.status}).`,
       response.status,
