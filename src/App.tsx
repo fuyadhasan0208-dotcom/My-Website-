@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { AppProvider } from './contexts/AppContext';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { ToastContainer } from './components/ToastContainer';
@@ -22,27 +23,29 @@ function ScrollToTop() {
 
 export default function App() {
   return (
-    <AppProvider>
-      <HashRouter>
-        <ScrollToTop />
-        <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-[#1E1B4B]">
-          <Navbar />
-          <main className="flex-1">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/study-hub" element={<StudyHub />} />
-              <Route path="/quiz" element={<SmartQuiz />} />
-              <Route path="/tutor" element={<AITutor />} />
-              <Route path="/planner" element={<StudyPlanner />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </main>
-          <Footer />
-          <ToastContainer />
-          <ConfirmModal />
-        </div>
-      </HashRouter>
-    </AppProvider>
+    <ErrorBoundary>
+      <AppProvider>
+        <HashRouter>
+          <ScrollToTop />
+          <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-[#1E1B4B]">
+            <Navbar />
+            <main className="flex-1">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/study-hub" element={<StudyHub />} />
+                <Route path="/quiz" element={<SmartQuiz />} />
+                <Route path="/tutor" element={<AITutor />} />
+                <Route path="/planner" element={<StudyPlanner />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </main>
+            <Footer />
+            <ToastContainer />
+            <ConfirmModal />
+          </div>
+        </HashRouter>
+      </AppProvider>
+    </ErrorBoundary>
   );
 }

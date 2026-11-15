@@ -2,7 +2,7 @@ name: Deploy EduGenius AI to GitHub Pages
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "master"]
   workflow_dispatch:
 
 permissions:
@@ -29,6 +29,8 @@ jobs:
         run: npm ci
       - name: Build static bundle
         run: npm run build
+      - name: Create SPA 404 fallback
+        run: cp dist/index.html dist/404.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

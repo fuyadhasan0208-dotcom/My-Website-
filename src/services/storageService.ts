@@ -21,6 +21,30 @@ export const DEFAULT_SETTINGS: AppSettings = {
   defaultLevel: 'Higher Secondary (HSC)',
 };
 
+function safeGetItem(key: string): string | null {
+  try {
+    return window.localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}
+
+function safeSetItem(key: string, value: string): void {
+  try {
+    window.localStorage.setItem(key, value);
+  } catch {
+    // Ignore storage quota or restricted context errors
+  }
+}
+
+function safeRemoveItem(key: string): void {
+  try {
+    window.localStorage.removeItem(key);
+  } catch {
+    // Ignore restricted context errors
+  }
+}
+
 function safeParse<T>(raw: string | null, fallback: T): T {
   if (!raw) return fallback;
   try {
@@ -33,7 +57,7 @@ function safeParse<T>(raw: string | null, fallback: T): T {
 export const storageService = {
   getSettings(): AppSettings {
     const parsed = safeParse<Partial<AppSettings>>(
-      localStorage.getItem(KEYS.SETTINGS),
+      safeGetItem(KEYS.SETTINGS),
       {}
     );
     const model =
@@ -56,67 +80,67 @@ export const storageService = {
   },
 
   saveSettings(settings: AppSettings): void {
-    localStorage.setItem(KEYS.SETTINGS, JSON.stringify(settings));
+    safeSetItem(KEYS.SETTINGS, JSON.stringify(settings));
   },
 
   resetSettings(): AppSettings {
-    localStorage.setItem(KEYS.SETTINGS, JSON.stringify(DEFAULT_SETTINGS));
+    safeSetItem(KEYS.SETTINGS, JSON.stringify(DEFAULT_SETTINGS));
     return { ...DEFAULT_SETTINGS };
   },
 
   getChatHistory(): ChatMessageItem[] {
-    return safeParse<ChatMessageItem[]>(localStorage.getItem(KEYS.CHAT_HISTORY), []);
+    return safeParse<ChatMessageItem[]>(safeGetItem(KEYS.CHAT_HISTORY), []);
   },
 
   saveChatHistory(messages: ChatMessageItem[]): void {
-    localStorage.setItem(KEYS.CHAT_HISTORY, JSON.stringify(messages.slice(-60)));
+    safeSetItem(KEYS.CHAT_HISTORY, JSON.stringify(messages.slice(-60)));
   },
 
   clearChatHistory(): void {
-    localStorage.removeItem(KEYS.CHAT_HISTORY);
+    safeRemoveItem(KEYS.CHAT_HISTORY);
   },
 
   getStudyNotes(): SavedStudyNote[] {
-    return safeParse<SavedStudyNote[]>(localStorage.getItem(KEYS.STUDY_NOTES), []);
+    return safeParse<SavedStudyNote[]>(safeGetItem(KEYS.STUDY_NOTES), []);
   },
 
   saveStudyNote(note: SavedStudyNote): SavedStudyNote[] {
     const existing = this.getStudyNotes();
     const updated = [note, ...existing.filter((n) => n.id !== note.id)].slice(0, 20);
-    localStorage.setItem(KEYS.STUDY_NOTES, JSON.stringify(updated));
+    safeSetItem(KEYS.STUDY_NOTES, JSON.stringify(updated));
     return updated;
   },
 
   deleteStudyNote(id: string): SavedStudyNote[] {
     const updated = this.getStudyNotes().filter((n) => n.id !== id);
-    localStorage.setItem(KEYS.STUDY_NOTES, JSON.stringify(updated));
+    safeSetItem(KEYS.STUDY_NOTES, JSON.stringify(updated));
     return updated;
   },
 
   getQuizHistory(): QuizAttemptSummary[] {
-    return safeParse<QuizAttemptSummary[]>(localStorage.getItem(KEYS.QUIZ_HISTORY), []);
+    return safeParse<QuizAttemptSummary[]>(safeGetItem(KEYS.QUIZ_HISTORY), []);
   },
 
   saveQuizAttempt(attempt: QuizAttemptSummary): QuizAttemptSummary[] {
     const updated = [attempt, ...this.getQuizHistory()].slice(0, 20);
-    localStorage.setItem(KEYS.QUIZ_HISTORY, JSON.stringify(updated));
+    safeSetItem(KEYS.QUIZ_HISTORY, JSON.stringify(updated));
     return updated;
   },
 
   getStudyPlans(): SavedStudyPlan[] {
-    return safeParse<SavedStudyPlan[]>(localStorage.getItem(KEYS.STUDY_PLANS), []);
+    return safeParse<SavedStudyPlan[]>(safeGetItem(KEYS.STUDY_PLANS), []);
   },
 
   saveStudyPlan(plan: SavedStudyPlan): SavedStudyPlan[] {
     const updated = [plan, ...this.getStudyPlans()].slice(0, 10);
-    localStorage.setItem(KEYS.STUDY_PLANS, JSON.stringify(updated));
+    safeSetItem(KEYS.STUDY_PLANS, JSON.stringify(updated));
     return updated;
   },
 
   clearAllLocalData(): void {
-    localStorage.removeItem(KEYS.CHAT_HISTORY);
-    localStorage.removeItem(KEYS.STUDY_NOTES);
-    localStorage.removeItem(KEYS.QUIZ_HISTORY);
-    localStorage.removeItem(KEYS.STUDY_PLANS);
+    safeRemoveItem(KEYS.CHAT_HISTORY);
+    safeRemoveItem(KEYS.STUDY_NOTES);
+    safeRemoveItem(KEYS.QUIZ_HISTORY);
+    safeRemoveItem(KEYS.STUDY_PLANS);
   },
 };
