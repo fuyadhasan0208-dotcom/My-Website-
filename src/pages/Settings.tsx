@@ -59,7 +59,9 @@ export function Settings() {
   const [connectionResult, setConnectionResult] =
     useState<ApiConnectionTestResult | null>(null);
   const [connectionError, setConnectionError] = useState<string | null>(null);
-  const [serverConfigured, setServerConfigured] = useState<boolean | null>(null);
+  const [serverConfigured, setServerConfigured] = useState<
+    'loading' | 'configured' | 'unconfigured' | 'offline'
+  >('loading');
 
   useEffect(() => {
     let active = true;
@@ -71,11 +73,11 @@ export function Settings() {
       })
       .then((data: { configured?: boolean }) => {
         if (active) {
-          setServerConfigured(Boolean(data.configured));
+          setServerConfigured(data.configured ? 'configured' : 'unconfigured');
         }
       })
       .catch(() => {
-        if (active) setServerConfigured(null);
+        if (active) setServerConfigured('offline');
       });
     return () => {
       active = false;
@@ -90,7 +92,7 @@ export function Settings() {
     try {
       const result = await testApiConnection(settings);
       setConnectionResult(result);
-      setServerConfigured(result.configured);
+      setServerConfigured(result.configured ? 'configured' : 'unconfigured');
       showToast({
         type: 'success',
         title: 'Gemini API connected',
@@ -100,7 +102,7 @@ export function Settings() {
       if (err instanceof GeminiServiceError) {
         setConnectionError(err.message);
         if (err.needsConfiguration) {
-          setServerConfigured(false);
+          setServerConfigured('unconfigured');
         }
       } else {
         setConnectionError('Unable to test API connection right now.');
@@ -223,7 +225,7 @@ export function Settings() {
                 <span className="font-semibold text-red-700">Connection Issue:</span>
                 <span className="text-red-700">{connectionError}</span>
               </>
-            ) : serverConfigured === true ? (
+            ) : serverConfigured === 'configured' ? (
               <>
                 <CheckCircle2 className="w-4 h-4 text-[#10B981] shrink-0" />
                 <span className="font-medium text-[#1E1B4B]">
@@ -231,12 +233,21 @@ export function Settings() {
                   model access.
                 </span>
               </>
-            ) : serverConfigured === false ? (
+            ) : serverConfigured === 'unconfigured' ? (
               <>
                 <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
                 <span className="font-medium text-red-700">
                   GEMINI_API_KEY is not configured yet. Set it in AI Studio Secrets or your server{' '}
                   <code className="font-mono text-xs">.env</code> file.
+                </span>
+              </>
+            ) : serverConfigured === 'offline' ? (
+              <>
+                <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                <span className="font-medium text-slate-700">
+                  Backend API server (<code className="font-mono text-xs">/api/health</code>) is
+                  not reachable from this static host. Deploy <code className="font-mono text-xs">server.ts</code>{' '}
+                  or configure <code className="font-mono text-xs">VITE_API_BASE_URL</code> for live AI responses.
                 </span>
               </>
             ) : (

@@ -111,12 +111,15 @@ export function Home() {
                 <span>Start Learning Free</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
-              <a
-                href="#features"
-                className="inline-flex items-center justify-center px-6 py-3 text-sm sm:text-base font-semibold text-[#1E1B4B] bg-white border border-slate-200 hover:border-[#4338CA]/40 hover:bg-slate-50 rounded-xl transition-colors whitespace-nowrap shrink-0"
+              <button
+                type="button"
+                onClick={() =>
+                  document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
+                }
+                className="inline-flex items-center justify-center px-6 py-3 text-sm sm:text-base font-semibold text-[#1E1B4B] bg-white border border-slate-200 hover:border-[#4338CA]/40 hover:bg-slate-50 rounded-xl transition-colors whitespace-nowrap shrink-0 cursor-pointer"
               >
                 Explore AI Features
-              </a>
+              </button>
             </div>
           </div>
 

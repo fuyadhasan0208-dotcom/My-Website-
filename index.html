@@ -25,5 +25,20 @@
   <body class="bg-[#F8FAFC] text-[#1E1B4B] antialiased selection:bg-[#4338CA]/15 selection:text-[#1E1B4B]">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      window.addEventListener('load', function () {
+        window.setTimeout(function () {
+          var root = document.getElementById('root');
+          if (root && root.children.length === 0) {
+            root.innerHTML =
+              '<div style="max-width:600px;margin:64px auto;padding:24px;font-family:Inter,sans-serif;background:#fff;border:1px solid #e2e8f0;border-radius:16px;color:#1e1b4b">' +
+              '<h1 style="margin:0 0 8px;font-size:20px">EduGenius AI — Build Output Required</h1>' +
+              '<p style="margin:0 0 12px;font-size:14px;line-height:1.6;color:#475569">The application bundle did not start. If you deployed this repository directly from a branch on GitHub Pages, switch <strong>Settings → Pages → Build and deployment → Source</strong> to <strong>GitHub Actions</strong> so the built <code>dist/</code> bundle is served.</p>' +
+              '<p style="margin:0;font-size:13px;color:#64748b">Local build command: <code>npm install &amp;&amp; npm run build</code></p>' +
+              '</div>';
+          }
+        }, 2500);
+      });
+    </script>
   </body>
 </html>
